@@ -16,7 +16,7 @@ class VideoPlayerScreen extends StatefulWidget {
 }
 
 class _VideoPlayerState extends State<VideoPlayerScreen> {
-  late VideoPlayerController _controller;
+   VideoPlayerController _controller;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _VideoPlayerState extends State<VideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) => Center(
-      child: _controller.value.isInitialized
+      child: _controller.value.initialized
           ? AspectRatio(
               aspectRatio: _controller.value.aspectRatio,
               child: VideoPlayer(_controller),

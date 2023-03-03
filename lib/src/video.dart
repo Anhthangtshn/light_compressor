@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
+
 /// Video Configurations.
 class Video {
   Video({
-    required this.videoName,
+    @required this.videoName,
     this.keepOriginalResolution = false,
     this.videoBitrateInMbps,
     this.videoHeight,
@@ -12,14 +14,14 @@ class Video {
   final String videoName;
 
   /// To keep the original video height and width when compressing.
-  final bool? keepOriginalResolution;
+  final bool keepOriginalResolution;
 
   /// A custom bitrate for the video.
-  final int? videoBitrateInMbps;
+  final int videoBitrateInMbps;
 
   /// A custom height for the video.
-  final int? videoHeight;
+  final int videoHeight;
 
   /// A custom width for the video.
-  final int? videoWidth;
+  final int videoWidth;
 }

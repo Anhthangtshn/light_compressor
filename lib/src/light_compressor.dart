@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:light_compressor/light_compressor.dart';
 
@@ -37,14 +38,14 @@ class LightCompressor {
   static const EventChannel _progressStream =
       EventChannel('compression/stream');
 
-  Stream<double>? _onProgressUpdated;
+  Stream<double> _onProgressUpdated;
 
   /// Fires whenever the uploading progress changes.
   Stream<double> get onProgressUpdated {
     _onProgressUpdated ??= _progressStream
         .receiveBroadcastStream()
         .map<double>((dynamic result) => result != null ? result : 0);
-    return _onProgressUpdated!;
+    return _onProgressUpdated;
   }
 
   /// This function compresses a given [path] video file and writes the
@@ -77,12 +78,12 @@ class LightCompressor {
   /// * [disableAudio] to give the option to generate a video with no audio.
   /// This defaults to `false`
   Future<dynamic> compressVideo({
-    required String path,
-    required VideoQuality videoQuality,
-    required AndroidConfig android,
-    required IOSConfig ios,
-    required Video video,
-    bool? disableAudio = false,
+    @required String path,
+    @required VideoQuality videoQuality,
+    @required AndroidConfig android,
+    @required IOSConfig ios,
+    @required Video video,
+    bool disableAudio = false,
     bool isMinBitrateCheckEnabled = true,
   }) async {
     final Map<String, dynamic> response = jsonDecode(await _channel
@@ -113,6 +114,6 @@ class LightCompressor {
   }
 
   /// Call this function to cancel video compression process.
-  static Future<Map<String, dynamic>?> cancelCompression() async =>
+  static Future<Map<String, dynamic>> cancelCompression() async =>
       jsonDecode(await _channel.invokeMethod<dynamic>('cancelCompression'));
 }

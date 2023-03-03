@@ -15,3 +15,17 @@ class AndroidConfig {
 }
 
 enum SaveAt { Pictures, Movies, Downloads }
+
+extension SaveAtString on SaveAt {
+  String get name {
+    switch (this) {
+      case SaveAt.Pictures:
+        return 'Pictures';
+      case SaveAt.Movies:
+        return 'Movies';
+      case SaveAt.Downloads:
+        return 'Downloads';
+    }
+    return 'Downloads';
+  }
+}

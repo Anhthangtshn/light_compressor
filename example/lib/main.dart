@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:light_compressor/light_compressor.dart';
 import 'package:light_compressor_example/utils/file_utils.dart';
 import 'package:light_compressor_example/video_player.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,11 +19,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late String _desFile;
-  String? _displayedFile;
-  late int _duration;
-  String? _failureMessage;
-  String? _filePath;
+   String _desFile;
+  String _displayedFile;
+   int _duration;
+  String _failureMessage;
+  String _filePath;
   bool _isVideoCompressed = false;
 
   final LightCompressor _lightCompressor = LightCompressor();
@@ -53,7 +54,7 @@ class _MyAppState extends State<MyApp> {
               children: <Widget>[
                 if (_filePath != null)
                   Text(
-                    'Original size: ${_getVideoSize(file: File(_filePath!))}',
+                    'Original size: ${_getVideoSize(file: File(_filePath))}',
                     style: const TextStyle(fontSize: 16),
                   ),
                 const SizedBox(height: 8),
@@ -130,13 +131,20 @@ class _MyAppState extends State<MyApp> {
 
   // Pick a video form device's storage
   Future<void> _pickVideo() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.photos,
+      Permission.camera,
+      Permission.storage
+    ].request();
+
+    print(statuses);
     _isVideoCompressed = false;
 
-    final FilePickerResult? result = await FilePicker.platform.pickFiles(
+    final FilePickerResult result = await FilePicker.platform.pickFiles(
       type: FileType.video,
     );
 
-    final PlatformFile? file = result!.files.first;
+    final PlatformFile file = result.files.first;
 
     if (file == null) {
       return;
@@ -153,11 +161,11 @@ class _MyAppState extends State<MyApp> {
 
     final Stopwatch stopwatch = Stopwatch()..start();
     final dynamic response = await _lightCompressor.compressVideo(
-      path: _filePath!,
-      videoQuality: VideoQuality.medium,
+      path: _filePath,
+      videoQuality: VideoQuality.very_high,
       isMinBitrateCheckEnabled: false,
       video: Video(videoName: videoName),
-      android: AndroidConfig(isSharedStorage: true, saveAt: SaveAt.Movies),
+      android: AndroidConfig(isSharedStorage: true),
       ios: IOSConfig(saveInGallery: false),
     );
 
@@ -182,4 +190,4 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-String _getVideoSize({required File file}) => formatBytes(file.lengthSync(), 2);
+String _getVideoSize({File file}) => formatBytes(file.lengthSync(), 2);
